@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html> 
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.3.0/base-min.css">
+<body>
+
+<h1>CATALOGO DE BILLETES </br>BANCO DE LA REPUBLICA</h1>
+
+<form class="busqueda">
+    <fieldset>
+        <legend>BUSCAR BILLETE DE COLOMBIA</legend>
+        <input type="" placeholder="Denominacion">
+        <input type="" placeholder="Ano">
+        <input type="" placeholder="Mes">
+        <button type="submit" class="busqueda-button busqueda-button-primary">Buscar</button>
+    </fieldset>
+<blockquote>
+    Si busca un especimen o un billete de caracteristicas particulares solo es necesario digitar la informacin en los espacios disponibles y se mostraran los resultados 
+</blockquote>
+<table class="encabezado">
+    <thead>
+        <tr>
+            <th>FECHA</th>
+            <th>REGULAR</th>
+            <th>BUENO</th>
+            <th>MUY BUENO</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr class="resultado">
+            <td>1953 Enero</td>
+            <td>150.000</td>
+            <td>200.000</td>
+            <td>500.000</td>
+        </tr>
+
+        <tr>
+            <td>1953, Febreo</td>
+            <td>200.000</td>
+            <td>500.000</td>
+            <td>------</td>
+        </tr>
+
+        <tr class="resultado">
+            <td>1993 Octubre</td>
+            <td>120.000</td>
+            <td>500.000</td>
+            <td>1.000.000</td>
+        </tr>
+
+        <tr>
+            <td>4</td>
+            <td>---</td>
+            <td>---</td>
+            <td>----</td>
+        </tr>
+
+        <tr class="resultado">
+            <td>-</td>
+            <td>----</td>
+            <td>----</td>
+            <td>----</td>
+        </tr>
+
+        <tr>
+            <td>-----</td>
+            <td>-----</td>
+            <td>-----</td>
+            <td>-----</td>
+        </tr>
+
+        <tr class="resultado">
+            <td>-----</td>
+            <td>-----</td>
+            <td>-----</td>
+            <td>-----</td>
+        </tr>
+
+        <tr>
+            <td>-----</td>
+            <td>-----</td>
+            <td>-----</td>
+            <td>-----</td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+<script type="text/javascript">
+
+
+
+
+
+var consulta = 'create table "Hoja1" ("fano" TEXT(255,0) NOT NULL,"fmes" TEXT(255,0) NOT NULL,"mesnumero" TEXT(255,0) NOT NULL,"fdia" TEXT(255,0) NOT NULL,"fecha" BLOB NOT NULL,"c_2000_Descrip" TEXT(255,0) NOT NULL,"c_2000_Regular" TEXT(255,0) NOT NULL,"c_2000_Bueno" TEXT(255,0) NOT NULL,"c_2000_Muy Bueno" TEXT(255,0) NOT NULL,"c_2006_Descrip" TEXT(255,0) NOT NULL,"c_2006_Regular" TEXT(255,0) NOT NULL,"c_2006_Bueno" TEXT(255,0) NOT NULL,"c_2006_Muy Bueno" TEXT(255,0) NOT NULL,"SERIE" TEXT(255,0) NOT NULL,"c_2013_Descrip" TEXT(255,0) NOT NULL,"c_2013_Regular" TEXT(255,0) NOT NULL,"c_2013_Bueno" TEXT(255,0) NOT NULL,"c_2013_Muy Bueno" TEXT(255,0) NOT NULL,"billete " TEXT(255,0) NOT NULL,"denominacion" integer NOT NULL);';
+
+
+var consulta2 = 'INSERT INTO "Hoja1" VALUES ("1923", "Julio", "7", "20", "8602", "7 Dig", "", "", "", "", "350000", "800000", "2200000", "", "7 Dig", "450000", "1000000", "4300000", "1PESOORO", "1");';
+var consultaCierre = 'COMMIT;';
+var consultaPragma = 'PRAGMA foreign_keys = true;';
+
+
+var db;
+      function creaBase(){
+        console.log("Abriendo base de datos");
+         try{
+              if(window.openDatabase){
+              var shortName = 'db_BANREP';
+              var version = '1.0';
+              var displayName = 'Display Information';
+              var maxSize = 65536; // in bytes
+              db = openDatabase(shortName, version, displayName, maxSize);
+              alert("Base de datos abierta");
+        }
+     }catch(e){
+                 alert(e);
+           }
+     }
+     function executeQuery($query,callback){
+     try{
+         if(window.openDatabase){
+         db.transaction(
+         function(tx){
+            tx.executeSql($query,[],function(tx,result){
+                if(typeof(callback) == "function"){
+                 callback(result);
+                }else{
+                    if(callback != undefined){
+                       eval(callback+"(result)");
+                    }
+                }
+         },function(tx,error){console.log(error)});
+    });
+           return rslt;
+         }
+         }catch(e){}
+         }
+           function createTable(){
+                 
+                 executeQuery(consulta);
+                 console.log("Creada la base de datos");
+                 executeQuery(consulta2);
+                 console.log("Inserción de primer dato");
+                 
+           }
+           function insertValue(){
+                
+                executeQuery(consulta2,function(results){alert(results)});
+            }
+
+        function consultarBase(){
+            console.log("Inicia consulta");
+            executeQuery("SELECT fano from Hoja1 where fano = '2000';",function(results){
+                    //console.log(results.rows.item);
+                    console.log("Obtuvo resultados");
+                    console.log(results.rows.item(0));
+                });
+            console.log("Termina consulta");
+
+
+
+        }
+
+        function cerrarBase(){
+            console.log("Cerrando base de datos");
+            executeQuery("EXIT;",function(results){
+                    //console.log(results.rows.item);
+                    console.log("Resultados al cerrar");
+                   
+                });
+            console.log("Base de datos cerrada");
+
+
+
+        }
+
+</script>
+
+
+<input type="button" name='open' onClick="creaBase()" value='Abrir base de datos'>
+<input type="button" name='create' onClick="createTable()" value='Crear la tabla'>
+<input type="button" name='insert' onClick="insertValue()" value='Insertar primer valor: 1 PESO ORO 1923'>
+<input type="button" name='query' onClick="consultarBase()" value='Consultar la base'>
+<input type="button" name='close' onClick="cerrarBase()" value='Cerrar la base'>
+<input type="file" id="image" >
+<div result></div>
+
+
+
+
+</body>
+</html>
