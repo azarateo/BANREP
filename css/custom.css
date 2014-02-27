@@ -64,3 +64,7 @@ header {
     font-family: 'Gafata', sans-serif;
     font-size: 22px;
 }
+
+body > header {
+    z-index: 1 !important;
+}
